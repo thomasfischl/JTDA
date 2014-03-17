@@ -1,0 +1,42 @@
+
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 15px;
+}
+
+h1, p {
+  color: #333;
+}
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+.link {
+  stroke: #999;
+}
+
+strong {
+  color: red;
+}
+
+#place {
+  margin-top: 60px;
+}
+
+#filePart input[type="file"] {
+  display: inline;
+}
+
+li {
+  word-wrap: break-word;
+}
+
+.lock {
+  color: red;
+}

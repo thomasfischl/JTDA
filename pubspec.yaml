@@ -1,0 +1,8 @@
+name: JTDA
+version: 0.0.1
+author: Thomas Fischl
+description: This application parses a java thread dump file and visualizes the dependencies between the threads.
+homepage: https://github.com/thomasfischl/JTDA
+dependencies:
+  browser: any
+  js: any
