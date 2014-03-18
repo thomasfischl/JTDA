@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <script src="js/d3.js"></script>
+    
+    <!-- This fix is needed because of an dart2js bug -->
+    <script type="text/javascript">
+      function DartObject(o) {	
+         this.o = o;	
+      }
+    </script>
   </head>
   <body>
   
