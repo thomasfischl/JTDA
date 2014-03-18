@@ -5,4 +5,3 @@ description: This application parses a java thread dump file and visualizes the 
 homepage: https://github.com/thomasfischl/JTDA
 dependencies:
   browser: any
-  js: any
