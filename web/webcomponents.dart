@@ -59,8 +59,8 @@ class Dialog {
     btnClose.text = "Close";
     btnClose.onClick.listen(_clickListener);
 
-
     document.body.append(_modalDialog);
+    dragable();
   }
 
   void close(){
@@ -82,5 +82,44 @@ class Dialog {
     return body;
   }
 
+  var moving = false;
+  var mouseMoveStreamSubscription;
+  var mouseUpStreamSubscription;
+  
+  var diffleft = 0;
+  var difftop = 0;
+  
+  void dragable(){
+    _modalDialog.onMouseDown.listen(mouseDown);
+  }
+  
+  void mouseDown(MouseEvent event) {
+    moving = true;
+
+    diffleft = event.client.x - _modalDialog.getClientRects().first.left;
+    difftop = event.client.y - _modalDialog.getClientRects().first.top;
+    
+    mouseMoveStreamSubscription = window.onMouseMove.listen(mouseMove);
+    mouseUpStreamSubscription = window.onMouseUp.listen(mouseUp);
+  }
+  
+  void mouseMove(MouseEvent event) {
+    if(moving){
+      _modalDialog.style.left = (event.client.x - diffleft).toString() + "px";
+      _modalDialog.style.top = (event.client.y - difftop).toString() + "px";
+    }
+  }
+  
+  void mouseUp(MouseEvent event) {
+    moving = false;
+    if( mouseMoveStreamSubscription!=null ){
+      mouseMoveStreamSubscription.cancel();
+      mouseMoveStreamSubscription = null;
+    }
+    if( mouseUpStreamSubscription != null ){
+      mouseUpStreamSubscription.cancel();
+      mouseUpStreamSubscription = null;
+    }
+  }
 }
 
