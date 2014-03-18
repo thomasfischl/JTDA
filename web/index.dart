@@ -19,6 +19,10 @@ void main() {
 void filePart() {
   InputElement inputFile = querySelector("#inputFile");
   inputFile.onChange.listen(readFile);
+  inputFile.style.width = "500px";
+
+  CheckboxInputElement inputFilter = querySelector("#filter");
+  inputFilter.onChange.listen((e) => update());
 }
 
 void chartPart() {
@@ -93,8 +97,14 @@ void update(){
   maps.clear();
   lockes.clear();
 
+  if(threadList == null){
+    print("No thread dumps available.");
+    return;
+  }
 
-  var it = threadList.where((t) => !(t.locks.isEmpty && t.waitingToLocks.isEmpty)).iterator;
+  CheckboxInputElement inputFilter = querySelector("#filter");
+
+  var it = threadList.where((t) => inputFilter.checked || !(t.locks.isEmpty && t.waitingToLocks.isEmpty)).iterator;
   while (it.moveNext()) {
     var t = it.current;
 
@@ -219,7 +229,17 @@ void viewThreadDumpTextArea(Node body, JavaThreadDump jtd){
 void showResourceDetails(D3Node event) {
   DivElement chartDiv = querySelector("#divChart");
 
-  Dialog d = new Dialog("Resource: " + event.text, event.x + chartDiv.getBoundingClientRect().left, event.y + chartDiv.getBoundingClientRect().top);
+  var title = "Resource: " + event.text;
+  maps.keys.where((td) => (td.locks.contains(event.text))).forEach((td){
+    var str = td.dump.where((str) => str.contains("<" + event.text +">")).first.trim();
+    str = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
+    if(str.startsWith("a ")){
+      str = str.substring(2);
+    }
+    title += " (" + str + ")";
+  });
+
+  Dialog d = new Dialog(title, event.x + chartDiv.getBoundingClientRect().left, event.y + chartDiv.getBoundingClientRect().top);
   DivElement body = d.setBody(new DivElement());
 
   StringBuffer sb = new StringBuffer();

@@ -1,7 +1,7 @@
 library d3;
 
 import 'dart:js';
-import 'package:js/js.dart' as js;
+import 'js.dart' as js;
 import 'dart:async';
 import 'dart:html';
 
@@ -37,7 +37,7 @@ class D3Graph {
     //var fill = d3.scale.category20();
 
     _force = d3.layout.force().size(js.array([_width, _height])).nodes(_jsNodes
-        ).links(_jsLinks).linkDistance(60).charge(-130).on("tick", _tick);
+        ).links(_jsLinks).linkDistance(60).charge(-100).on("tick", _tick);
 
 
     var svg = d3.select(element).append("svg").attr("width", _width).attr("height",
@@ -94,13 +94,13 @@ class D3Graph {
   }
 
   void update() {
-    _node.attr("transform", _getTransform)
-         .attr("fill", (d, x, x1) => d.color)
-         .attr("r", (d, x, x1) => d.radius);
+    _node.attr("transform", _getTransform);
+    _node.attr("fill", (d, x, x1) => d['color']);
+    _node.attr("r", (d, x, x1) => d['radius']);
 
     if(_showText) {
       _text.attr("transform", _getTransform)
-           .text((d, x, x1) => d.text);
+           .text((d, x, x1) => d['text']);
     }
 
     _link.attr("x1", (d, x, x1) => d['source']['x'])
@@ -113,7 +113,9 @@ class D3Graph {
   List<D3Edge> get edges => _links;
 
   String _getTransform(d, x, y) {
-    return "translate(" + d.x.toString() + "," + d.y.toString() + ")";
+    num x = d.x;
+    num y = d.y;
+    return "translate($x,$y)";
   }
 
   void _clickNode(d, x, y) {
@@ -131,7 +133,7 @@ class D3Graph {
   }
 
   D3Node _getD3Node(var d){
-    return _nodes.firstWhere((n) => n.id == d['id'], orElse: () => null);
+    return _nodes.firstWhere((n) => n.id == d.id, orElse: () => null);
   }
 
   void _restart() {
