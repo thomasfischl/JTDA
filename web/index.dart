@@ -21,7 +21,7 @@ void filePart() {
   inputFile.onChange.listen(readFile);
   inputFile.style.width = "500px";
 
-  CheckboxInputElement inputFilter = querySelector("#filter");
+  CheckboxInputElement inputFilter = querySelector("#hideThreadFilter");
   inputFilter.onChange.listen((e) => update());
 }
 
@@ -102,13 +102,13 @@ void update(){
     return;
   }
 
-  CheckboxInputElement inputFilter = querySelector("#filter");
+  CheckboxInputElement hideThreadFilter = querySelector("#hideThreadFilter");
 
-  var it = threadList.where((t) => inputFilter.checked || !(t.locks.isEmpty && t.waitingToLocks.isEmpty)).iterator;
+  var it = threadList.where((t) => !hideThreadFilter.checked || !(t.locks.isEmpty && t.waitingToLocks.isEmpty)).iterator;
   while (it.moveNext()) {
     var t = it.current;
 
-    var node = new D3Node(t.name , color: getColor(t.state));
+    var node = new D3Node(t.name , color: JavaThreadDump.getColor(t.state));
     node.radius = 9;
     node.onClick().listen(showThreadDumpDetails);
     chart.addNode(node);
@@ -132,24 +132,6 @@ Function addLocks(Map<String, D3Node> lockes, D3Node node){
             chart.addEdge(node, lockes[l]);
           };
 }
-
-
-String getColor(String state) {
-  switch (state) {
-    case 'WAITING':
-    case 'TIMED_WAITING':
-      return "yellow";
-
-    case 'RUNNABLE':
-      return "green";
-
-    case 'BLOCKED':
-      return "red";
-  }
-
-  return "black";
-}
-
 
 void showThreadDumpDetails(D3Node event) {
   JavaThreadDump jtd = null;
@@ -242,8 +224,6 @@ void showResourceDetails(D3Node event) {
   Dialog d = new Dialog(title, event.x + chartDiv.getBoundingClientRect().left, event.y + chartDiv.getBoundingClientRect().top);
   DivElement body = d.setBody(new DivElement());
 
-  StringBuffer sb = new StringBuffer();
-
   UListElement list = body.append(new UListElement());
   list.className = "list-unstyled";
 
@@ -251,7 +231,7 @@ void showResourceDetails(D3Node event) {
     var txtNode = document.createElement("small");
     txtNode.text = td.name + " (locked)";
     var li = list.append(new LIElement());
-    li.append(getThreadBox(td.state));
+    li.append(getThreadStatusBox(td.state));
     li.append(txtNode);
   });
 
@@ -259,19 +239,19 @@ void showResourceDetails(D3Node event) {
     var txtNode = document.createElement("small");
     txtNode.text = td.name;
     var li = list.append(new LIElement());
-    li.append(getThreadBox(td.state));
+    li.append(getThreadStatusBox(td.state));
     li.append(txtNode);
   });
 
 }
 
-DivElement getThreadBox(String state) {
+DivElement getThreadStatusBox(String state) {
    var box = new DivElement();
   box.style.width = "10px";
   box.style.height = "10px";
   box.style.marginRight = "10px";
   box.style.marginTop = "5px";
-  box.style.backgroundColor = getColor(state);
+  box.style.backgroundColor = JavaThreadDump.getColor(state);
   box.className = "pull-left";
   return box;
 }

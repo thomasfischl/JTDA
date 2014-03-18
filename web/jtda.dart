@@ -54,7 +54,7 @@ class JavaThreadDump {
   String name;
   Set<String> locks = new Set();
   List<String> waitingToLocks = new List();
-  String state;
+  String state = "Unkown";
 
   String toString() {
     var text = "Thread: $name ($state)";
@@ -68,5 +68,19 @@ class JavaThreadDump {
     return text;
   }
 
+  static String getColor(String state) {
+    switch (state) {
+      case 'WAITING':
+      case 'TIMED_WAITING':
+        return "yellow";
 
+      case 'RUNNABLE':
+        return "green";
+
+      case 'BLOCKED':
+        return "red";
+    }
+
+    return "grey";
+  }
 }
