@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>JTDA - Java Thread Dump Analyzer</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/d3.js"></script>
+    
+    <!-- This fix is needed because of an dart2js bug -->
+    <script type="text/javascript">
+      function DartObject(o) {	
+         this.o = o;	
+      }
+    </script>
+  </head>
+  <body>
+  
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><strong>J</strong>ava<strong> T</strong>hread<strong> D</strong>ump<strong> A</strong>nalyzer</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+          <!-- <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li> --> 
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div id="place" class="container">
+      <div class="panel panel-default">
+        <div class="panel-body" id='filePart'>
+          <label for="exampleInputFile">Thread Dump File:</label>
+          <input type="file" id="inputFile">
+          <p class="help-block pull-right">Select a java thread dump file (.tdump).</p>
+        </div>
+      </div>
+      
+      <div class="panel panel-default">
+        <div class="panel-body" id='controlls'>
+          <div class="checkbox">
+            <label>
+              Show all Threads <input type="checkbox" id="filter">
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel panel-default">
+        <div class="panel-body" id='chartPart'></div>
+      </div>
+      
+    </div>
+    
+    <script type="application/dart" src="index.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
