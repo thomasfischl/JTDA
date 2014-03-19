@@ -6,6 +6,7 @@ body {
   font-weight: normal;
   line-height: 1.2em;
   margin: 15px;
+  height:100%;
 }
 
 h1, p {
@@ -39,4 +40,10 @@ li {
 
 .lock {
   color: red;
+}
+
+#place{
+ min-height:100%;
+ margin-left: 20px;
+ margin-right: 20px;
 }

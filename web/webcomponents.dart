@@ -85,31 +85,31 @@ class Dialog {
   var moving = false;
   var mouseMoveStreamSubscription;
   var mouseUpStreamSubscription;
-  
+
   var diffleft = 0;
   var difftop = 0;
-  
+
   void dragable(){
     _modalDialog.onMouseDown.listen(mouseDown);
   }
-  
+
   void mouseDown(MouseEvent event) {
     moving = true;
 
     diffleft = event.client.x - _modalDialog.getClientRects().first.left;
     difftop = event.client.y - _modalDialog.getClientRects().first.top;
-    
+
     mouseMoveStreamSubscription = window.onMouseMove.listen(mouseMove);
     mouseUpStreamSubscription = window.onMouseUp.listen(mouseUp);
   }
-  
+
   void mouseMove(MouseEvent event) {
     if(moving){
       _modalDialog.style.left = (event.client.x - diffleft).toString() + "px";
       _modalDialog.style.top = (event.client.y - difftop).toString() + "px";
     }
   }
-  
+
   void mouseUp(MouseEvent event) {
     moving = false;
     if( mouseMoveStreamSubscription!=null ){
@@ -123,3 +123,97 @@ class Dialog {
   }
 }
 
+class Accordion {
+
+  DivElement _root;
+
+  Map<DivElement, DivElement> _list = new Map();
+
+  Accordion( {String id: null}) {
+    _root = new DivElement();
+    _root.className = "panel-group";
+
+    if(id != null){
+      _root.id = id;
+    }
+  }
+
+  void appendEntry(String title, DivElement content){
+    DivElement entry = createDivElement(parent: _root, className: "panel panel-default");
+    DivElement heading = createDivElement(parent: entry, className: "panel-heading");
+
+    HeadingElement titleElem = heading.append(new HeadingElement.h4());
+    titleElem.className = "panel-title";
+    titleElem.text = title;
+
+    DivElement body = createDivElement(parent: entry, className: "panel-collapse collapse");
+    DivElement bodyEntry = createDivElement(parent: body, className: "panel-body");
+    bodyEntry.append(content);
+
+    _list[heading] = body;
+
+    heading.onClick.listen((e){
+      _list.forEach((h,b){
+        if( e.currentTarget == h){
+          b.classes.add("in");
+        } else {
+          b.classes.remove("in");
+        }
+      });
+    });
+  }
+
+  DivElement get root => _root;
+
+}
+
+class CollapsePanel {
+
+  DivElement _root;
+  DivElement _heading;
+  DivElement _body;
+  DivElement _bodyEntry;
+
+
+  CollapsePanel(DivElement parent, String title) {
+    _root = createDivElement(parent: parent, className: "panel panel-default");
+    _heading = createDivElement(parent: _root, className: "panel-heading");
+
+    HeadingElement titleElem = _heading.append(new HeadingElement.h4());
+    titleElem.className = "panel-title";
+    titleElem.text = title;
+
+    _body = createDivElement(parent: _root, className: "panel-collapse collapse");
+    _bodyEntry = createDivElement(parent: _body, className: "panel-body");
+
+    _heading.onClick.listen((e){
+      print("click");
+      if( _body.classes.contains("in")){
+        _body.classes.remove("in");
+      } else {
+        _body.classes.add("in");
+      }
+    });
+  }
+
+  void appendBody(Element elem){
+    _bodyEntry.append(elem);
+  }
+
+}
+
+
+
+DivElement createDivElement({Element parent, String className}){
+  DivElement elem = new DivElement();
+
+  if(parent != null) {
+    parent.append(elem);
+  }
+
+  if(className != null){
+    elem.className = className;
+  }
+
+  return elem;
+}

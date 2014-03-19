@@ -29,7 +29,7 @@
       </div>
     </div>
     
-    <div id="place" class="container">
+    <div id="place">
       <div class="panel panel-default">
         <div class="panel-body" id='filePart'>
           <label for="exampleInputFile">Select a java thread dump file (.tdump):</label>
@@ -37,18 +37,29 @@
         </div>
       </div>
       
-      <div class="panel panel-default">
-        <div class="panel-body" id='controlls'>
-          <div class="checkbox">
-            <label>
-              Hide irrelevant Threads <input type="checkbox" id="hideThreadFilter" checked >
-            </label>
+      <div class="row">
+        <div class="col-md-3">
+
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="checkbox">
+                <label>
+                  Hide irrelevant Threads <input type="checkbox" id="hideThreadFilter" checked >
+                </label>
+         	  </div>
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" id='controls' style="overflow:auto; height:645px; overflow-x: hidden;"></div>
+          </div>
+
+        </div>
+        <div class="col-md-9">
+          <div class="panel panel-default">
+            <div class="panel-body" id='chartPart'></div>
           </div>
         </div>
-      </div>
-      
-      <div class="panel panel-default">
-        <div class="panel-body" id='chartPart'></div>
       </div>
       
     </div>

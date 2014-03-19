@@ -5,9 +5,7 @@ import 'webcomponents.dart';
 
 D3Graph chart;
 SelectElement selColorNode;
-
 List<JavaThreadDump> threadList;
-
 Map<JavaThreadDump, D3Node> maps = new Map();
 Map<String, D3Node> lockes = new Map();
 
@@ -27,7 +25,6 @@ void filePart() {
 
 void chartPart() {
   HtmlElement root = querySelector("#chartPart");
-
   DivElement divChart = new DivElement();
   divChart.id = "divChart";
   root.append(divChart);
@@ -102,8 +99,12 @@ void update(){
     return;
   }
 
-  CheckboxInputElement hideThreadFilter = querySelector("#hideThreadFilter");
+  updateControlPanel();
+  updateChartPanel();
+}
 
+void updateChartPanel() {
+  CheckboxInputElement hideThreadFilter = querySelector("#hideThreadFilter");
   var it = threadList.where((t) => !hideThreadFilter.checked || !(t.locks.isEmpty && t.waitingToLocks.isEmpty)).iterator;
   while (it.moveNext()) {
     var t = it.current;
@@ -116,8 +117,61 @@ void update(){
     t.locks.forEach(addLocks(lockes,node));
     t.waitingToLocks.forEach(addLocks(lockes,node));
   }
-
   chart.update();
+}
+
+void updateControlPanel() {
+  if(querySelector("#threadList")!=null){
+    querySelector("#threadList").remove();
+  }
+
+  CheckboxInputElement hideThreadFilter = querySelector("#hideThreadFilter");
+  DivElement divThreadList =  querySelector("#controls").append(new DivElement());
+  divThreadList.className = "panel-group";
+  divThreadList.id = "threadList";
+
+  Map<String, List<JavaThreadDump>> threadListEnties = new Map();
+
+  threadList.where(filterThreads).forEach((t) {
+    if(!threadListEnties.containsKey(t.state)){
+        threadListEnties[t.state] = new List();
+    }
+    threadListEnties[t.state].add(t);
+  });
+
+  threadListEnties.forEach((state,tdList){
+    CollapsePanel panel = new CollapsePanel(divThreadList, "Thread - $state");
+
+    tdList.forEach((td){
+      DivElement div = new DivElement();
+      div.append(getThreadStatusBox(state));
+
+       ParagraphElement p = new ParagraphElement();
+       p.text = td.name;
+       p.title = td.name;
+       p.style.textOverflow = "ellipsis";
+       p.style.whiteSpace = "nowrap";
+       p.style.overflow = "hidden";
+
+       div.onClick.listen((e){
+         print("click: " + e.target.toString());
+         maps.forEach((t1,n){
+           if( t1 == td){
+             showThreadDumpDetails(n);
+           }
+         });
+       });
+
+       div.append(p);
+       panel.appendBody(div);
+    });
+
+  });
+}
+
+bool filterThreads(JavaThreadDump t){
+  CheckboxInputElement hideThreadFilter = querySelector("#hideThreadFilter");
+  return !hideThreadFilter.checked || !(t.locks.isEmpty && t.waitingToLocks.isEmpty);
 }
 
 Function addLocks(Map<String, D3Node> lockes, D3Node node){
