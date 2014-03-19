@@ -1,0 +1,12 @@
+2014-03-17 10:43:16
+Full thread dump Java HotSpot(TM) 64-Bit Server VM (23.5-b02 mixed mode):
+
+"Inactive RequestProcessor thread [Was:Default RequestProcessor/null]" daemon prio=2 tid=0x000000000ae65000 nid=0x278c in Object.wait() [0x000000000ba1f000]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x00000000fbbf8538> (a java.lang.Object)
+	at org.openide.util.RequestProcessor$Processor.run(RequestProcessor.java:1903)
+	- locked <0x00000000fbbf8538> (a java.lang.Object)
+
+   Locked ownable synchronizers:
+	- None
